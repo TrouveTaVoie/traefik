@@ -13,7 +13,7 @@ services:
    - "--providers.docker.network=http"
    - "--entrypoints.web.address=:80"
    - "--entrypoints.websecure.address=:443"
-   - "--certificatesresolvers.default.acme.email=toub@trouvetavoie.io"
+   - "--certificatesresolvers.default.acme.email=XXXXXXXXXXXXXXX"
    - "--certificatesresolvers.default.acme.storage=/acme.json"
    - "--certificatesresolvers.default.acme.tlschallenge=true"
   ports:
@@ -24,7 +24,7 @@ services:
    placement:
      constraints:
       - node.role == manager
-      - node.hostname == ip-172-31-23-133.eu-west-3.compute.internal
+      - node.hostname == ip-XXX-XX-XX-XXX.eu-west-3.compute.internal
    replicas: 1
    update_config:
     parallelism: 2
@@ -35,12 +35,12 @@ services:
      # Dashboard
      - "traefik.enable=true"
      - "traefik.docker.network=public"
-     - "traefik.http.routers.traefik.rule=Host(`traefik.trouvetavoie.io`)"
+     - "traefik.http.routers.traefik.rule=Host(`traefik_dashboard-domaine-name`)"
      - "traefik.http.routers.traefik.service=api@internal"
      - "traefik.http.routers.traefik.tls.certresolver=default"
      - "traefik.http.routers.traefik.entrypoints=websecure"
      - "traefik.http.routers.traefik.middlewares=authtraefik"
-     - "traefik.http.middlewares.authtraefik.basicauth.users=mtoub:{SHA}ilZ/oa3tZWFRWDPXjawGsjmSJY4="
+     - "traefik.http.middlewares.authtraefik.basicauth.users=XXXX:{SHA}gdfgdfgdgdwe235$%£$%$%$%$%="
      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
 
      # global redirect to https
@@ -54,8 +54,6 @@ services:
   volumes:
    - /var/run/docker.sock:/var/run/docker.sock
    - ./acme.json:/etc/traefik/acme.json
-  #environment:
-    #- /var/run/docker.sock:/var/run/docker.sock
   networks:
    - public
 
