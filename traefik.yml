@@ -1,0 +1,64 @@
+version: "3.7"
+
+services:
+ traefik:
+  image: traefik:v2.0
+  command:
+   - "--api=true"
+   #- "--api.insecure=true"
+   - "--api.dashboard=true"
+   - "--providers.docker=true"
+   - "--providers.docker.exposedbydefault=false"
+   - "--providers.docker.swarmMode=true"
+   - "--providers.docker.network=http"
+   - "--entrypoints.web.address=:80"
+   - "--entrypoints.websecure.address=:443"
+   - "--certificatesresolvers.default.acme.email=toub@trouvetavoie.io"
+   - "--certificatesresolvers.default.acme.storage=/acme.json"
+   - "--certificatesresolvers.default.acme.tlschallenge=true"
+  ports:
+   - 80:80
+   - 443:443
+   - 8080:8080
+  deploy:
+   placement:
+     constraints:
+      - node.role == manager
+      - node.hostname == ip-172-31-23-133.eu-west-3.compute.internal
+   replicas: 1
+   update_config:
+    parallelism: 2
+    delay: 10s
+   restart_policy:
+     condition: on-failure
+   labels:
+     # Dashboard
+     - "traefik.enable=true"
+     - "traefik.docker.network=public"
+     - "traefik.http.routers.traefik.rule=Host(`traefik.trouvetavoie.io`)"
+     - "traefik.http.routers.traefik.service=api@internal"
+     - "traefik.http.routers.traefik.tls.certresolver=default"
+     - "traefik.http.routers.traefik.entrypoints=websecure"
+     - "traefik.http.routers.traefik.middlewares=authtraefik"
+     - "traefik.http.middlewares.authtraefik.basicauth.users=mtoub:{SHA}ilZ/oa3tZWFRWDPXjawGsjmSJY4="
+     - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
+     # global redirect to https
+     - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+     - "traefik.http.routers.http-catchall.entrypoints=web"
+     - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+
+     # middleware redirect
+     - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  volumes:
+   - /var/run/docker.sock:/var/run/docker.sock
+   - ./acme.json:/etc/traefik/acme.json
+  #environment:
+    #- /var/run/docker.sock:/var/run/docker.sock
+  networks:
+   - public
+
+networks:
+  public:
+    external: true
