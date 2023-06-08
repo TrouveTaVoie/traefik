@@ -22,7 +22,6 @@ sudo chmod 600 acme.json
 ## Create the traekik.yml file
 ```
 sudo touch traefik.yml
-sudo nano traefik.yml
 ```
 
 ## Brief description of traefik.yml
