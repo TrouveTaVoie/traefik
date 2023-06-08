@@ -1,4 +1,6 @@
 # Traefik
+
+![docker](https://github.com/TrouveTaVoie/traefik/assets/74034851/108a4341-e83c-4768-b317-f70ba067e29b)
 [Traefik](https://traefik.io) is a modern HTTP reverse proxy and load balancer that makes deploying microservices easy.
 
 Traefik integrates with your existing infrastructure components ([Docker](https://www.docker.com/), [Swarm mode](https://docs.docker.com/engine/swarm/), [Kubernetes](https://kubernetes.io), [Marathon](https://mesosphere.github.io/marathon/), [Consul](https://www.consul.io/), [Etcd](https://coreos.com/etcd/), [Rancher](https://rancher.com), [Amazon ECS](https://aws.amazon.com/ecs), ...) and configures itself automatically and dynamically.
@@ -20,7 +22,6 @@ sudo chmod 600 acme.json
 ## Create the traekik.yml file
 ```
 sudo touch traefik.yml
-sudo nano traefik.yml
 ```
 
 ## Brief description of traefik.yml
